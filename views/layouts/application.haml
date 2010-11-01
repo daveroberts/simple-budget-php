@@ -1,0 +1,45 @@
+%html
+  %head
+    %title Money Manager
+    = render :partial => "layouts/includes"
+  %body
+    #maincontainer
+      #topsection
+        #banner
+          .center= image_tag "/images/logo.png", :alt => 'Money Manager'
+        #chromemenu.chromestyle
+          %ul
+            %li= link_to "Lists", "#", :rel=>"dropmenu1"
+            %li= link_to "Accounts", "#", :rel=>"dropmenuaccounts"
+            %li= link_to "Transactions", "#", :rel=>"dropmenu2"
+            %li= link_to "Statistics", "#", :rel=>"dropmenu3"
+        #dropmenu1.dropmenudiv
+          %span= link_to "People", {:controller=>:person, :action=>:list}
+          %span= link_to "Accounts", {:controller=>:account, :action=>:list}
+          %span= link_to "Categories", {:controller=>:category, :action=>:list}
+        #dropmenuaccounts.dropmenudiv
+          - for account in current_user_or_first.bank_accounts.sort{|a,b|a.name<=>b.name}
+            %span= link_to account.name, {:controller=>:account, :action=>:cash_flow, :id=>account.id}
+        #dropmenu2.dropmenudiv
+          %span= link_to "Cash Flow", {:controller=>:person, :action=>:cash_flow}
+          %span= link_to "Revenues / Expenses", {:controller=>:person, :action=>:revenues_expenses}
+          %span= link_to "Import", {:controller=>:import}
+        #dropmenu3.dropmenudiv
+          %span= link_to "Category Breakdown", {:controller=>:category, :action=>:breakdown}
+          %span= link_to "Net Worth", {:controller=>:person, :action=>:networth}
+          %span= link_to "Spending Chart", {:controller=>:person, :action=>:revenuesexpenseschart}
+        %script{:type=>"text/javascript"} cssdropdown.startchrome("chromemenu")
+        %div
+          %span= current_user_or_first.name
+          %span Switch to
+          - for person in Person.find :all
+            - if person.id != session[:person_id].to_i
+              %span >>
+              %span= link_to person.name, {:controller=>:person, :action=>:swap, :id=>person.id, :redirect_url=>request.request_uri}
+      #contentwrapper
+        #contentcolumn
+          - if flash[:notice]
+            %div.notice= flash[:notice]
+          = yield
+      #footer
+        %div Money Manager

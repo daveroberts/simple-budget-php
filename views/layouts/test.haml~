@@ -1,0 +1,32 @@
+%html
+  %head
+    %title Money Manager
+    = stylesheet_link_tag "/stylesheets/layout.css"
+    = stylesheet_link_tag "/stylesheets/style.css"
+    = stylesheet_link_tag "/stylesheets/chrome.css"
+    = javascript_include_tag :defaults
+    = javascript_include_tag "/javascripts/chrome.js"
+    = javascript_include_tag "/javascripts/calendar.js"
+    = javascript_include_tag "/javascripts/lang/calendar-en.js"
+  %body
+    #banner
+      .center= image_tag "/images/logo.png", :alt => 'Money Manager'
+    #leftcontent
+      = yield :left
+    #parent
+      #centercontent
+        #chromemenu.chromestyle
+          %ul
+            %li= link_to "Actions", "#", :rel="dropmenu1"
+            %li= link_to "Transactions", "#", :rel="dropmenu2"
+            %li= link_to "Reports", "#", :rel="dropmenu3"
+            %li= link_to "Stats", "#", :rel="dropmenu4"
+            %li= link_to "Various", "#", :rel="dropmenu5"
+        #dropmenu1.dropmenudiv
+          %p= link_to "Home", "#"
+          %p= link_to "Prefs", "#"
+        %script{:type=>"text/javascript"} cssdropdown.startchrome("chromemenu")
+        %br/
+        = yield
+    #rightcontent
+      = yield :right

@@ -1,0 +1,8 @@
+.red { color: red; }
+.green { color: green; }
+.even { background-color: #F0F5FE; }
+.odd { background-color: #FFFFFF; }
+table { font-family: sans-serif; font-size: 0.7em; }
+body { font-family: sans-serif; line-height: 1.2em; }
+a { color: #3333CC; text-decoration: none; }
+a:hover { color: black; text-decoration: underline; }

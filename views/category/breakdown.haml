@@ -1,0 +1,41 @@
+%h1= "Category Breakdown for #{@person.name}"
+%table{:width=>"100%"}
+  %thead
+    %tr
+      %th Tag
+      %th Yearly
+      %th Monthly
+      %th Bi-Weekly
+      %th Daily
+      %th Total
+  %tbody
+    - total = 0
+    - for tag in @tags
+      - tag_expenses = @person.expenses_by_tag(tag.id)
+      - if tag_expenses != 0
+        %tr{:class => cycle("even", "odd")}
+          %td= link_to tag.name, :action=>"show", :tag_id=>tag.id
+          %td{:class=>colorizeMoney(tag_expenses.to_f)}= number_to_currency(365*tag_expenses/@total_time)
+          %td{:class=>colorizeMoney(tag_expenses.to_f)}= number_to_currency(30*tag_expenses/@total_time)
+          %td{:class=>colorizeMoney(tag_expenses.to_f)}= number_to_currency(14*tag_expenses/@total_time)
+          %td{:class=>colorizeMoney(tag_expenses.to_f)}= number_to_currency(tag_expenses/@total_time)
+          %td{:class=>colorizeMoney(tag_expenses.to_f)}= number_to_currency(tag_expenses)
+          - total = total + tag_expenses.to_f
+    %tr{:class => cycle("even", "odd")}
+      %td= link_to "Untagged", :action=>"none"
+      - other_expenses = @person.expenses_by_tag(-1)
+      %td{:class=>colorizeMoney(other_expenses.to_f)}= number_to_currency(365*other_expenses/@total_time)
+      %td{:class=>colorizeMoney(other_expenses.to_f)}= number_to_currency(31*other_expenses/@total_time)
+      %td{:class=>colorizeMoney(other_expenses.to_f)}= number_to_currency(14*other_expenses/@total_time)
+      %td{:class=>colorizeMoney(other_expenses.to_f)}= number_to_currency(other_expenses/@total_time)
+      %td{:class=>colorizeMoney(other_expenses.to_f)}= number_to_currency(other_expenses)
+      - total = total + other_expenses.to_f
+    %tr{:class => cycle("even", "odd")}
+      %td Total
+      %td{:class=>colorizeMoney(total.to_f)}= number_to_currency(365*total/@total_time)
+      %td{:class=>colorizeMoney(total.to_f)}= number_to_currency(31*total/@total_time)
+      %td{:class=>colorizeMoney(total.to_f)}= number_to_currency(14*total/@total_time)
+      %td{:class=>colorizeMoney(total.to_f)}= number_to_currency(total/@total_time)
+      %td{:class=>colorizeMoney(total.to_f)}= number_to_currency(total)
+%div= @graph
+= link_to "Back to People listing", :action=>"list"

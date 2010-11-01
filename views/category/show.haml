@@ -1,0 +1,20 @@
+%h1= "#{@tag.name} breakdown for #{@person.name}"
+%table
+  %thead
+    %tr
+      %th Description
+      %th Amount
+      %th Paid By
+      %th Date
+  %tbody
+    - for entry in @entries
+      %tr{:class => cycle("even", "odd")}
+        %td
+          = edit_entry_link entry.id
+          = entry.description
+        %td{:class=>colorizeMoney(entry.share)}= number_to_currency(entry.share)
+        %td
+          = link_to "#{entry.charged_to.owner.name}'s #{entry.charged_to.name}", :controller=>"account", :action=>"cash_flow", :person=>entry.charged_to.owner.id, :id=>entry.charged_to.id
+        %td= entry.date
+%p= "Total: #{number_to_currency(@total)}"
+%p= link_to "Back to People listing", :action=>"list"

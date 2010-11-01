@@ -1,0 +1,36 @@
+%div= render :partial => 'date/range', :locals => { :from_date => @from_date, :to_date=>@to_date, :id=>@person.id }
+%h1== Cash Flow Statement for all accounts owned by #{@person.name}
+%table{:style => "width: 100%;"}
+  %thead
+    %tr
+      %th Date
+      %th Description
+      %th Amount
+      %th Tags
+      %th Shared Between
+      %th Balance
+  %tbody
+    - balance = 0
+    - for account in @accounts
+      %tr{:class => cycle("even", "odd")}
+        %td
+        %td= "#{account.name} Beginning Balance"
+        - balance += account.beginning_balance.to_f
+        %td= number_to_currency(account.beginning_balance.to_f)
+        %td
+        %td
+        %td= number_to_currency(balance)
+    - for entry in @entries
+      %tr{:class => cycle("even", "odd")}
+        %td= entry.date
+        %td= entry.description
+        - balance += entry.amount.to_f
+        %td{:class=>colorizeMoney(entry.amount.to_f)}= number_to_currency(entry.amount)
+        %td= entry.tag == nil ? "" : entry.tag.name
+        %td
+          - for person in entry.people
+            = "#{person.name} "
+        %td= number_to_currency(balance)
+%p= "Balance: #{number_to_currency(balance)}"
+%p= "Cash Flow: #{number_to_currency(balance-@beginning_balance_total)}"
+%p= link_to "Back to People listing", :action=>"list"

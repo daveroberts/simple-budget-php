@@ -1,0 +1,12 @@
+%p
+  %span= label :expand, :in
+  %span= text_field :expand, :in
+%p
+  %span= label :expand, :out
+  %span= text_field :expand, :out
+%p
+  %span= label :expand, :tag_id
+  %span= select :expand, :tag_id, Tag.find(:all).sort{|a,b|a.name <=> b.name}.collect{|t|[ t.name, t.id ]}, :include_blank=>true
+%p
+  %span= label :expand, :shared_between
+  %span= text_field :expand, :shared_between

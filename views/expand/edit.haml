@@ -1,0 +1,7 @@
+- form_tag({:action=>"update", :id=>@expand.id}) do
+  %fieldset
+    %legend Edit Expand
+    %div= render :partial => "expand"
+    %p
+      .entry= submit_tag 'Update expand'
+= link_to "Back to Expand List", :action=>"list"

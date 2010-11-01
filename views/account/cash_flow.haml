@@ -1,0 +1,49 @@
+%div= render :partial => 'date/range', :locals => { :from_date => @from_date, :to_date=>@to_date, :id=>@account.owner.id }
+%h1= "Cash Flow Statement for Account: #{@account.name}"
+%p= link_to_function "Add New Entry", visual_effect(:toggle_slide, :newEntry)
+%div{:id=>"newEntry", :style=>"display: none"}
+  - form_tag({:controller=>"entry", :action=>"new", :account_id=>@account.id}) do
+    %fieldset
+      %legend New Entry
+      %div= render :partial => "entry/entry"
+      %p
+        .entry= submit_tag 'Add new entry'
+= "Balance: #{number_to_currency(@account.balance_as_of @to_date)}"
+%table{:style=>"width: 100%;"}
+  %thead
+    %tr
+      %th Date
+      %th Description
+      %th
+      %th Amount
+      %th Tag
+      %th Shared Between
+      %th Balance
+  %tbody
+    - balance = @account.balance_as_of @to_date
+    - for entry in @entries
+      %tr{:class => cycle("even", "odd")}
+        %td= entry.date
+        %td= entry.description
+        %td
+          = edit_entry_link entry.id
+        %td{:class=>colorizeMoney(entry.amount.to_f)}= number_to_currency(entry.amount)
+        %td
+          - if entry.tag != nil
+            = link_to(entry.tag.name, :controller=>"category", :action=>"show", :tag_id=>entry.tag.id)
+          - else
+            = link_to("Untagged", :controller=>"category", :action=>"none")
+        %td
+          - for person in entry.people
+            = "#{person.name} "
+        %td= number_to_currency(balance)
+        - balance -= entry.amount.to_f
+    %tr.odd
+      %td
+      %td Beginning Balance
+      %td
+      %td{:class=>colorizeMoney(@account.balance_as_of(@from_date))}= number_to_currency(@account.balance_as_of @from_date)
+      %td
+      %td
+      %td
+%div= link_to "Net Worth", :action=>:networth, :id=>@account.id

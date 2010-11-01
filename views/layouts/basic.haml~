@@ -1,7 +1,0 @@
-%html
-  %head
-    %title Money Manager
-    = render :partial => "includes"
-  %body
-    = yield
-

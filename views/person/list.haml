@@ -1,8 +1,0 @@
-%ul
-- @people.each do |person|
-  %li= link_to person.name, {:controller=>"account", :action=>"list", :person_id=>person.id}
-%br/
-
-- form_tag(:action=>'new') do
-  = text_field('person','name')
-  = submit_tag 'Add new person'
